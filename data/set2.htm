@@ -1,0 +1,67 @@
+<div class="container my-2" id="set2ctnr">
+    <form id="set2">
+        <div class="form-control my-1" id="tkSpecs">
+            <b>Water Tank Specs</b><br>
+            <div class="form-check form-check-inline" id="tk">
+                <input class="form-check-input" type="radio" name="tkType" value="1" checked>
+                <label class="form-check-label" for="1">Cuboid Tank</label>
+            </div>
+            <div class="form-check form-check-inline mb-3" id="tk">
+                <input class="form-check-input" type="radio" name="tkType" value="2">
+                <label class="form-check-label" for="2">Cylindrical Tank</label>
+            </div>
+            <div class="mb-1 row">
+                <label for="ht" class="col-sm-2 col-form-label">Height:</label>
+                <div class="col-sm-10">
+                    <input class="my-1" type="number" name="ht" placeholder="Enter value in cm" required>
+                </div>
+            </div>
+            <div class="mb-1 row">
+                <label for="wd" class="col-sm-2 col-form-label">Width:</label>
+                <div class="col-sm-10">
+                    <input class="my-1" type="number" name="wd" placeholder="Enter value in cm" required>
+                </div>
+            </div>
+            <div class="mb-1 row">
+                <label for="len" class="col-sm-2 col-form-label">Length:</label>
+                <div class="col-sm-10">
+                    <input class="my-1" type="number" name="len" placeholder="Enter value in cm" required>
+                </div>
+            </div>                          
+        </div>
+        <div class="form-control my-1">
+            <b>Google IDs</b><br>
+            <label for="gscriptid" class="tbl">Script ID</label>
+            <input class="my-1 w-100" type="text" name="gscriptid" placeholder="Enter ID" required><br>
+            <label for="gfolderid" class="tbl">Folder ID</label>
+            <input class="my-1 w-100" type="text" name="gfolderid" placeholder="Enter ID" required><br>
+        </div>
+    </form>
+    <script>
+        $(document).ready(function () {
+            $("input[name='tkType']").click(function () {
+                if ($(this).val() == 1) {
+                    $("label[for='len']").show();
+                    $("input[name='len']").show();
+                    $("input[name='len']").prop('disabled', false);
+                    $("label[for='wd']").text("Width:");
+                } else {
+                    $("label[for='len']").hide();
+                    $("input[name='len']").hide();
+                    $("input[name='len']").prop('disabled', true);
+                    $("label[for='wd']").text("Radius:");
+                }
+            });
+            $.get('/settings/set2', function (data) {
+                $('input[name="tkType"][value="' + data.tkType + '"]').prop('checked', true);
+                $('input[name="len"]').val(data.len);
+                $('input[name="wd"]').val(data.wd);
+                $('input[name="ht"]').val(data.ht);
+                $('input[name="gscriptid"]').val(data.gscriptid);
+                $('input[name="gfolderid"]').val(data.gfolderid);
+            }).fail(function () {
+                alert('Failed to load settings. Please try again.');
+            });
+        });
+    </script>
+</div>
