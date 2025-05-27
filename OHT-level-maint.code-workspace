@@ -1,0 +1,18 @@
+{
+	"folders": [
+		{
+			"name": "250418-223630-d1",
+			"path": ".."
+		},
+		{
+			"name": "RC Switch Receive",
+			"path": "../../RC Switch Receive"
+		},
+		{
+			"path": "../../../../Arduino/OHT_waterlevel_sensor/data"
+		}
+	],
+	"settings": {
+		"liveServer.settings.multiRootWorkspaceName": "250418-223630-d1"
+	}
+}
