@@ -14,7 +14,6 @@
 #include "HTTPSRedirect.h"
 #include <ArduinoJson.h>
 
-
 class SettingsHandler : public RequestHandler {
 public:
   SettingsHandler(ESP8266WebServer &serverInstance, DynamicJsonDocument &set1Instance):server(serverInstance),set1(set1Instance){}
@@ -181,10 +180,7 @@ static int dateToday = 0;
 static int i = 0;
 const int httpsPort = 443;
 static char mode = '2';
-static bool confSet = false;
-
 static bool pumpOn = false;
-
 bool captivePortalMode = false;
 const char *ssid;
 const char *password;
@@ -288,9 +284,9 @@ void connectToWifi(){
   }
   if (WiFi.status() == WL_CONNECTED) {
     Serial.println("\nConnected to Wi-Fi. IP Address: " + WiFi.localIP().toString());
-    stopCaptivePortal(); // Release Captive Portal resources
+    stopCaptivePortal();
     captivePortalMode = false;
-    WiFi.softAPdisconnect(true); // Disable the Access Point mode
+    WiFi.softAPdisconnect(true);
     Serial.println("Access Point Mode disabled.");
     WiFi.setHostname(HOSTNAME);
     digitalWrite(ON_Board_LED, HIGH);
@@ -315,7 +311,7 @@ void startCaptivePortal(){
   captivePortalServer.on("/save", HTTP_POST, []() {
     set1["ssid"]=captivePortalServer.arg("ssid");
     set1["psk"]=captivePortalServer.arg("psk");
-    saveDataToFile("/set1.json", set1); //obj1);
+    saveDataToFile("/set1.json", set1);
     captivePortalServer.send(200,"text/html", "Restarting......");
     Serial.println("Wi-Fi credentials saved. Restarting...");
     delay(5000);
@@ -331,7 +327,7 @@ void stopCaptivePortal() {
   Serial.println("Captive Portal resources released.");
 }
 
-void saveDataToFile(const char* filePath, DynamicJsonDocument &doc){  // JsonObject& data){
+void saveDataToFile(const char* filePath, DynamicJsonDocument &doc){ 
   File file = LittleFS.open(filePath, "w");
   if (!file){
     Serial.println("Failed to open file");
@@ -351,7 +347,6 @@ void startMainServer(){
   server.on("/getData", HTTP_GET, sendHtmlData);
   server.on("/$list", HTTP_GET, handleListFiles);
   server.on("/$sysinfo", HTTP_GET, handleSysInfo);
-  //server.on("/login", HTTP_POST, handleLogin);
   server.onNotFound([]() {
     server.send(404, "text/html", FPSTR(notFoundContent));
   });
@@ -554,7 +549,7 @@ int measureDistanceCm () { //measure water level using JSNSR04T us sensor
     yield();
   }
   digitalWrite (TRIG, LOW);
-  long result_us = pulseIn(ECHO, HIGH); //, PULSEIN_TIMEOUT_uS);
+  long result_us = pulseIn(ECHO, HIGH);
   int dist_cm = (int) result_us / CONVERSION_FACTOR * TEMP_FACTOR;
   return dist_cm;
 }
@@ -581,7 +576,7 @@ void dispDataFile() {
   while (file.available()) {
     j++;
     file.read((byte *)&dataRead, sizeof(dataRead));
-    Serial.printf("Data[%d] = %d, Time = % u\n", j, dataRead.rawLevel, dataRead.timeStamp);
+    Serial.printf("Data[%d] = %d, Time = % lld\n", j, dataRead.rawLevel, dataRead.timeStamp);
   }
   Serial.println();
   file.close();
